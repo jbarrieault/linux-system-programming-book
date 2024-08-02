@@ -1,0 +1,10 @@
+{
+  "files.associations": {
+    "*.js": "javascriptreact",
+    "*.fql": "sql",
+    "*.sql": "sql",
+    "string.h": "c",
+    "errno.h": "c",
+    "fcntl.h": "c"
+  }
+}
