@@ -6,7 +6,9 @@
 // the entry point of the new thread
 void *start_thread(void *message)
 {
-  printf("%s\n", (const char *)message);
+  const pthread_t tid = pthread_self();
+  printf("TID %lu: %s\n", (unsigned long)tid, (const char *)message);
+
   return message;
 }
 
