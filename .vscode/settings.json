@@ -5,6 +5,10 @@
     "*.sql": "sql",
     "string.h": "c",
     "errno.h": "c",
-    "fcntl.h": "c"
+    "fcntl.h": "c",
+    "stdlib.h": "c",
+    "unistd.h": "c",
+    "stdio.h": "c",
+    "signal.h": "c"
   }
 }
