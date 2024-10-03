@@ -46,6 +46,11 @@ int main()
   strftime(tm_buff, sizeof(tm_buff), "%Y-%m-%d %H:%M:%S", tm_time);
   printf("tm_time formatted: %s\n", tm_buff);
 
+  // asctime_r() converts a *tm to an ASCII string
+  char asc_buff[26];
+  asctime_r(tm_time, asc_buff);
+  printf("tm_time converted to ascii: %s\n", asc_buff);
+
   // timespec is a struct used to represent an amount of time using seconds & nanoseconds
   struct timespec ts_nice_time;
   ts_nice_time.tv_sec = 420;
@@ -83,4 +88,8 @@ int main()
   // get time of day (seconds + microseconds since the unix epoch)
   gettimeofday(&tv, NULL);
   printf("gettimeofday: %ld seconds and %d microseconds since epoch\n", tv.tv_sec, tv.tv_usec);
+
+  tv.tv_sec++;
+  double tdiff = difftime(tv.tv_sec, time_t_time);
+  printf("tdiff of tv.tv_sec (%jd) and time_t (%jd): %f\n", tv.tv_sec, time_t_time, tdiff);
 }
