@@ -51,7 +51,7 @@ int main()
 
   // after the initial timer, the timer will continue
   // at this interval
-  ts.it_interval.tv_sec = 3;
+  ts.it_interval.tv_sec = 2;
   ts.it_interval.tv_nsec = 0;
 
   // if given a pointer to an itimerspec as the final arg,
@@ -67,7 +67,7 @@ int main()
     perror("timer_settime");
     exit(1);
   }
-  printf("timer armed! T-minus 5 seconds...\n");
+  printf("timer armed! T-minus %d seconds...\n", ts.it_value.tv_sec);
 
   sleep(2);
 
@@ -81,13 +81,45 @@ int main()
 
   // wait for the timer's signal
   pause();
-  printf("The timer will now sound at the subsequent interval of 3s\n");
+  printf("The timer will now sound at the subsequent interval of %ds\n", ts.it_interval.tv_sec);
   pause();
   pause();
   pause();
 
-  // TODO: timer_getoverrun
-  // block the SIGUSR1 signal,
-  // sleep for multime interval lengths
-  // wake, get & print the the overrun
+  // now let's block the SIGUSR1 signal, causing the timer to overrun
+  sigset_t ss;
+  sigemptyset(&ss);
+  sigaddset(&ss, SIGUSR1);
+
+  if (sigprocmask(SIG_BLOCK, &ss, NULL) < 0)
+  {
+    perror("sigprocmask");
+    exit(1);
+  }
+
+  printf("sleeping 10s with SIGUSR1 blocked, to cause timer overruns\n");
+  sleep(10);
+
+  if (sigprocmask(SIG_UNBLOCK, &ss, NULL) < 0)
+  {
+    perror("sigprocmask");
+    exit(1);
+  }
+
+  printf("SIGUSR1 unblocked, checking for timer overrun...\n");
+
+  // timer_getoverrun provdes the count of lapsed timer intervals
+  ret = timer_getoverrun(timer);
+  if (ret == -1)
+  {
+    perror("timer_getoverrun");
+  }
+  else if (ret == 0)
+  {
+    printf("No timer overrun\n");
+  }
+  else
+  {
+    printf("Timer has overrun %d times\n", ret);
+  }
 }
